@@ -10,6 +10,8 @@ export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
   const [toDos, setToDos] = useState([]);
+  const [completed, setCompleted] = useState(true);
+  const [editable, setEditable] = useState(false);
 
   useEffect(() => {
     loadToDos()
@@ -19,28 +21,45 @@ export default function App() {
   const work = () => setWorking(true);
   const onChangeText = (payLoad) => setText(payLoad);
   const saveToDos = async (toSave) => {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave))
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  }
+
+  const saveState = async (toSave) => {
+    await AsyncStorage.setItem("@current", JSON.stringify(toSave));
   }
 
   const loadToDos = async() => {
-    const s = await AsyncStorage.getItem(STORAGE_KEY)
-    setToDos(JSON.parse(s))
+    const s = await AsyncStorage.getItem(STORAGE_KEY);
+    setToDos(JSON.parse(s));
+    setWorking(JSON.parse(await AsyncStorage.getItem("@current")))
   }
 
+  /*Todo List 추가 기능 */
   const addTodo = () => {
     if(text === ""){
       return;
     }
     const newToDos = {
       ...toDos, 
-      [Date.now()]: { text, working },
+      [Date.now()]: { text, working, completed: false },
     };
 
     setToDos(newToDos);
     saveToDos(newToDos);
+    saveState(working);
     setText("");
   }
+
+  /*Todo List 완료 기능 */
+  const completeToDo = (key) => {
+    const newToDos = {...toDos};
+    newToDos[key] = {...newToDos[key], completed: !newToDos[key].completed };
+    setToDos(newToDos);
+    saveToDos(newToDos);
+    console.log(newToDos[key]);
+  };
   
+  /*Todo List 삭제 기능 */
   const deleteToDo = async (key) => {
     Alert.alert("삭제", "정말 지우시겠습니까?", [{text: "취소"}, {
       text: "삭제", 
@@ -55,6 +74,19 @@ export default function App() {
   );
   }
 
+  /*Todo List 수정 기능 */
+  // const editToDo = async (key) => {
+  //   const handleChange = (e) => {
+  //     setText(e.target.value);
+  //   }
+
+  //   const handleKeyDown = (e) => {
+  //     if(e.key === "Enter") {
+  //       setEditable(!editable);
+  //     }
+  //   }
+  // }
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -63,7 +95,7 @@ export default function App() {
           <Text style={{...styles.btn, color: working ? 'white': theme.grey}}>Work</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={travel}>
-          <Text style={{...styles.btn, color: working ? theme.grey : 'white'}}>Travel</Text>
+          <Text style={{...styles.btn, color: !working ? 'white': theme.grey }}>Travel</Text>
         </TouchableOpacity>
       </View>
       <View>
@@ -78,10 +110,20 @@ export default function App() {
       </View>
       <ScrollView>
         {Object.keys(toDos).map(key => 
-        toDos[key].working === working ? <View style={styles.toDo}key={key}>
-          <Text style={styles.toDoText}>{toDos[key].text}</Text>
+        toDos[key].working === working ? <View style={styles.toDo} key={key}>
+          <Text 
+           style={
+            {...styles.toDoText,
+            textDecorationLine: toDos[key].completed ? "line-through" : "none",
+            color: toDos[key].completed ? theme.grey : "white"}}>{toDos[key].text}</Text>
+          {/* <TouchableOpacity onPress={() => editToDo(key)}>
+            <Fontisto name="eraser" size={24} color="white" />
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => completeToDo(key)}>
+            {toDos[key].completed ? <Fontisto name="checkbox-active" size={16} color="white"/> : <Fontisto name="checkbox-passive" size={16} color="white"/>}
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => deleteToDo(key)}>
-          <Fontisto name="trash" size={24} color="black" />
+            <Fontisto name="trash" size={24} color="white" />
           </TouchableOpacity>
         </View>: null
         )}
@@ -124,6 +166,8 @@ const styles = StyleSheet.create({
   },
   toDoText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 20,
+    width: "70%",
+    fontWeight: "600",
   }
 });
