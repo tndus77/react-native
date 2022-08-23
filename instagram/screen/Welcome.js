@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Image, View, Text, TouchableOpacity, Button } from "react-native";
 import { colors } from "../color";
-import CreateAccount from "./CreateAccount";
 
 
 export default function Welcome({ navigation }) {

@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import { colors } from "../color";
+import { useForm } from "react-hook-form";
 
 export default function CreateAccount({ navigation }) {
+    const {register, handleSubmit, setValue} = useForm();
     const lastNameRef = useRef();
     const userNameRef = useRef();
     const emailRef = useRef();
@@ -14,11 +16,28 @@ export default function CreateAccount({ navigation }) {
         nextOne?.current?.focus();
     }
 
-    const onDone = () => {
+    const onValid = (data) => {
         setState(false);
-        alert('Done!!');
+        console.log(data);
     }
  
+    useEffect(() => {
+        register("성", {
+            required: true,
+        });
+        register("이름", {
+            required: true,
+        });
+        register("닉네임", {
+            required: true,
+        });
+        register("이메일", {
+            required: true,
+        });
+        register("비밀번호", {
+            required: true,
+        });
+    }, [])
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
@@ -33,7 +52,8 @@ export default function CreateAccount({ navigation }) {
              />
             <KeyboardAvoidingView 
              style={{
-                width: '100%'
+                width: '100%',
+                marginTop: 15,
              }}
              behavior="padding" 
              keyboardVerticalOffset={Platform.OS === "ios" ? 30 : 0}>
@@ -44,6 +64,7 @@ export default function CreateAccount({ navigation }) {
                 color= 'white'
                 onSubmitEditing={() => onNext(lastNameRef)}
                 style={styles.textInput}
+                onChangeText={(text) => setValue("이름", text)}
                 />
                 <TextInput
                 placeholder="성"
@@ -52,6 +73,7 @@ export default function CreateAccount({ navigation }) {
                 returnKeyType="next"
                 onSubmitEditing={() => onNext(userNameRef)}
                 style={styles.textInput}
+                onChangeText={(text) => setValue("성", text)}
                 />
                 <TextInput
                 placeholder="닉네임"
@@ -60,6 +82,7 @@ export default function CreateAccount({ navigation }) {
                 returnKeyType="next"
                 onSubmitEditing={() => onNext(emailRef)}
                 style={styles.textInput}
+                onChangeText={(text) => setValue("닉네임", text)}
                 />
                 <TextInput
                 placeholder="이메일"
@@ -69,6 +92,7 @@ export default function CreateAccount({ navigation }) {
                 keyboardType="email-address"
                 onSubmitEditing={() => onNext(passwordRef)}
                 style={styles.textInput}
+                onChangeText={(text) => setValue("이메일", text)}
                 />
                 <TextInput
                 placeholder="비밀번호"
@@ -78,11 +102,14 @@ export default function CreateAccount({ navigation }) {
                 secureTextEntry
                 returnKeyLabel="계정 생성"
                 style={styles.textInput}
-                onSubmitEditing={onDone}
+                onSubmitEditing={handleSubmit(onValid)}
+                onChangeText={(text) => setValue("비밀번호", text)}
                 />
             </KeyboardAvoidingView>
             <View style={styles.bg}>
-                <Button title="계정 생성" color={'white'} disabled={state} onPress={() => {}}/>
+                <Button title="계정 생성" color={'white'} disabled={state} onPress={handleSubmit(onValid)}>
+                    {loading ? <ActivityIndicator color="white" /> : <Text>계정 생성</Text>}
+                </Button>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.loginText}>로그인</Text>                
