@@ -1,18 +1,47 @@
+import { gql, useMutation } from "@apollo/client";
 import React, {useEffect, useRef} from "react";
 import { useForm } from "react-hook-form";
 import { View, Button, Image, StyleSheet, TextInput, TouchableWithoutFeedback, Platform, Keyboard } from "react-native";
 import { colors } from '../color';
 
+const LOG_IN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
+
 export default function Login({ navigation }) {
-    const { register, handleSubmit, setValue } = useForm();
+    const { register, handleSubmit, setValue, watch } = useForm();
     
     /*Keyboard return 시 다음 input focus */
     const passwordRef = useRef();
+    const onCompleted = (data) => {
+        const {
+            login: { ok, token },
+        } = data;
+        if(ok) {
+            isLoggedInVar(true);
+        }
+    }
+    const [loginMatation, {loading}] = useMutation(LOG_IN_MUTATION, {
+        onCompleted,
+    });
     const onNext = (nextOne) => {
         nextOne?.current?.focus();
     }
     const onValid = (data) => {
         console.log(data)
+        if(!loading) {
+            loginMatation({
+                variables: {
+                    ...data,
+                }
+            })
+        }
     };
     useEffect(() => {
         register("닉네임")
@@ -57,7 +86,14 @@ export default function Login({ navigation }) {
                 onChangeText={(text) => setValue("비밀번호", text)}
             />
             <View style={styles.bg}>
-                <Button title="로그인" color={'white'} onPress={handleSubmit(onValid)}/>
+                <Button 
+                 title="로그인" 
+                 color={'white'} 
+                 disabled={watch("username") || watch("password")} 
+                 loading={loading}
+                 //onPress={handleSubmit(onValid)}
+                 onPress={() => navigation.navigate('LoggedInNav')}
+                 />
             </View>
         </View>
         </TouchableWithoutFeedback>

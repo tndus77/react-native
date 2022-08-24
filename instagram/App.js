@@ -15,7 +15,7 @@ export default function App() {
     <ApolloProvider client={client}>
       <ThemeProvider>
         <NavigationContainer>
-          {isLoggedIn ? <LoggedInNav/> : <LoggedOutNav/>}
+          <LoggedInNav/>
         </NavigationContainer>
       </ThemeProvider>
     </ApolloProvider>

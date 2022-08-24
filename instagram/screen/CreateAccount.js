@@ -107,9 +107,7 @@ export default function CreateAccount({ navigation }) {
                 />
             </KeyboardAvoidingView>
             <View style={styles.bg}>
-                <Button title="계정 생성" color={'white'} disabled={state} onPress={handleSubmit(onValid)}>
-                    {loading ? <ActivityIndicator color="white" /> : <Text>계정 생성</Text>}
-                </Button>
+                <Button title="계정 생성" color={'white'} disabled={state} onPress={handleSubmit(onValid)}/>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.loginText}>로그인</Text>                
