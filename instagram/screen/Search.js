@@ -1,10 +1,12 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
-export default function Search() {
+export default function Search({ navigation }) {
     return(
-        <View style={{ backgroundColor: "black", flex: 1}}>
-            <Text style={{ color: "white" }}>Seed</Text>
+        <View style={{ backgroundColor: "black", flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity onPress={() => navigation.navigate("Photo")}>
+                <Text style={{ color: "white" }}>Search</Text>
+            </TouchableOpacity>
         </View>
     )
 }
