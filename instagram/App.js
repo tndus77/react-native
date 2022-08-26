@@ -20,6 +20,7 @@ export default function App() {
       </ThemeProvider>
     </ApolloProvider>
   );
+  
 }
 
 const styles = StyleSheet.create({

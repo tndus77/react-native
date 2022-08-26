@@ -15,13 +15,18 @@ const LOG_IN_MUTATION = gql`
 `;
 
 export default function Login({ navigation }) {
-    const { register, handleSubmit, setValue, watch } = useForm();
+    const { register, handleSubmit, setValue, watch } = useForm({
+		defaultValues: {
+			password: params?.password,
+			userName: params?.userName,
+		},
+	});
     
     /*Keyboard return 시 다음 input focus */
     const passwordRef = useRef();
-    const onCompleted = (data) => {
+    const onCompleted = async (data) => {
         const {
-            login: { ok, token },
+            login: { ok, Authorization },
         } = data;
         if(ok) {
             isLoggedInVar(true);
@@ -65,6 +70,7 @@ export default function Login({ navigation }) {
              source={require("../assets/logo.png")}
              />
             <TextInput
+                value={watch("userName")}
                 placeholder="닉네임"
                 secureTextEntry
                 autoCapitalize="none"
@@ -76,6 +82,7 @@ export default function Login({ navigation }) {
                 onChangeText={(text) => setValue("닉네임", text)}
             />
             <TextInput
+                value={watch("password")}
                 ref={passwordRef}
                 placeholder="비밀번호"
                 secureTextEntry
@@ -89,10 +96,10 @@ export default function Login({ navigation }) {
                 <Button 
                  title="로그인" 
                  color={'white'} 
-                 disabled={watch("username") || watch("password")} 
+                 disabled={!watch("userName") || watch(!"password")} 
                  loading={loading}
-                 //onPress={handleSubmit(onValid)}
-                 onPress={() => navigation.navigate('LoggedInNav')}
+                 onPress={handleSubmit(onValid)}
+                //  onPress={() => navigation.navigate('LoggedInNav')}
                  />
             </View>
         </View>
