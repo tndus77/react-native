@@ -3,7 +3,7 @@ import {LoggedOutNav} from './navigators/LoggedOutNav';
 import { NavigationContainer, ThemeProvider } from '@react-navigation/native';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { isLoggedInVar } from './apollo';
-import LoggedInNav from './navigators/LoggedInNav';
+import TabsNav from './navigators/TabsNav';
 import client from './apollo';
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
     <ApolloProvider client={client}>
       <ThemeProvider>
         <NavigationContainer>
-          <LoggedInNav/>
+          <TabsNav/>
         </NavigationContainer>
       </ThemeProvider>
     </ApolloProvider>

@@ -36,8 +36,9 @@ export default function Feed({ navigation }) {
 ]
 const { width, height} = useWindowDimensions();
 
-const RenderItem = ({ item }) => (
+const RenderItem = ({ item, id }) => (
     <View
+        key={id}
       style={{
         borderRadius: 10,
         justifyContent: 'center',

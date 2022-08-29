@@ -7,8 +7,9 @@ import { logUserOut } from "../apollo";
 export default function Search({ navigation }) {
     const {setValue, register, watch} = useForm();
     const SearchBox = () => (
-        <TextInput 
-        style={{ backgroundColor: "white"}}
+        <TextInput
+        style={{ backgroundColor: "rgba(255, 255, 255, 1)", padding: 10, borderRadius: 10, width: 300}}
+        color="black"
         placeholderTextColor="black"
         placeholder="Search Photos"
         returnKeyLabel="Search"

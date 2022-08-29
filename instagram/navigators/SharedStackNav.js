@@ -7,6 +7,7 @@ import Search from "../screen/Search";
 import Feed from "../screen/Feed";
 import Notification from "../screen/Notification";
 import Me from "../screen/Me";
+import UploadNav from "./UploadNav";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,7 @@ export default function StackNavFactory({screenName}) {
          {screenName === "Me" ? (
             <Stack.Screen name={"Me"} component={Me} />
             ): null}
+        <Stack.Screen name="UploadNav" component={UploadNav}/>
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="Photo" component={Photo}/>
     </Stack.Navigator>
