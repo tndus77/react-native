@@ -1,4 +1,4 @@
-import React, {useQuery} from "react";
+import React, {useEffect, useQuery} from "react";
 import { View, Text, FlatList, StyleSheet, StatusBar, Image, useWindowDimensions, TouchableOpacity } from "react-native";
 import { gql } from "@apollo/client";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragment";
@@ -39,7 +39,7 @@ const { width, height} = useWindowDimensions();
 const RenderItem = ({ item, id }) => (
     <View
         key={id}
-      style={{
+        style={{
         borderRadius: 10,
         justifyContent: 'center',
         margin: 10
@@ -70,6 +70,18 @@ const RenderItem = ({ item, id }) => (
       <Text style={{fontSize: 15, color: 'white'}}>{item.createdAt}</Text>
     </View>
   );
+  const MessagesButton = () => 
+  <TouchableOpacity 
+   style={{ marginRight: 15 }} 
+   onPress={() => navigation.navigate('MessagesNav')}>
+    <Ionicons name="paper-plane" color="white" size={24} />
+  </TouchableOpacity>
+
+  useEffect(() => {
+    navigation.setOptions({
+        headerRight: MessagesButton,
+    })
+  })
 
     return(
         <SafeAreaView style={styles.container}>

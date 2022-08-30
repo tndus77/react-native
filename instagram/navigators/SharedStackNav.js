@@ -8,6 +8,8 @@ import Feed from "../screen/Feed";
 import Notification from "../screen/Notification";
 import Me from "../screen/Me";
 import UploadNav from "./UploadNav";
+import UploadForm from "../screen/UploadForm";
+import MessagesNav from "./MessagesNav";
 
 const Stack = createStackNavigator();
 
@@ -40,8 +42,10 @@ export default function StackNavFactory({screenName}) {
          {screenName === "Me" ? (
             <Stack.Screen name={"Me"} component={Me} />
             ): null}
-        <Stack.Screen name="UploadNav" component={UploadNav}/>
+        <Stack.Screen name="UploadNav" options={{ headerShown: false }} component={UploadNav}/>
+        <Stack.Screen name="UploadForm" component={UploadForm}/>
+        <Stack.Screen name="MessagesNav" options={{ headerShown: false }} component={MessagesNav}/>
         <Stack.Screen name="Profile" component={Profile}/>
-        <Stack.Screen name="Photo" component={Photo}/>
+        <Stack.Screen name="Photo" options={{ headerShown: false }} component={Photo}/>
     </Stack.Navigator>
 }
